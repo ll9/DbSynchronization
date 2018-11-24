@@ -8,9 +8,12 @@ namespace Client
 {
     class Program
     {
+        private static Random _random = new Random();
+
         static void Main(string[] args)
         {
             Assembly.Load("Microsoft.EntityFrameworkCore.Design");
+            var people = new[] { "Hans", "Peter", "Jens", "Sabine" };
 
 
 
@@ -32,7 +35,11 @@ namespace Client
                     else if (decision == "c")
                     {
                         var project = _context.Projects.First();
-                        var person = new Person { Age = 22, Name = "Hans", Project = project };
+                        var person = new Person {
+                            Age = _random.Next(100),
+                            Name = people[_random.Next(people.Count())],
+                            Project = project };
+
                         _context.People.Add(person);
                         _context.SaveChanges();
                     }

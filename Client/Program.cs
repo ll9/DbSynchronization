@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Client
 {
@@ -6,6 +7,9 @@ namespace Client
     {
         static void Main(string[] args)
         {
+            Assembly.Load("Microsoft.EntityFrameworkCore.Design");
+
+
             Console.WriteLine("Hello World!");
         }
     }

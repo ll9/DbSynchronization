@@ -1,6 +1,7 @@
 ﻿using Client.Data;
 using Client.Models;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Client
@@ -30,7 +31,8 @@ namespace Client
                     }
                     else if (decision == "c")
                     {
-                        var person = new Person { Age = 22, Name = "Hans" };
+                        var project = _context.Projects.First();
+                        var person = new Person { Age = 22, Name = "Hans", Project = project };
                         _context.People.Add(person);
                         _context.SaveChanges();
                     }

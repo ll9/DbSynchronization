@@ -12,5 +12,19 @@ namespace Client.Models
 
         public int ProjectId { get; set; }
         public Project Project { get; set; }
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            var props = typeof(Person).GetProperties();
+
+            foreach (var prop in props)
+            {
+                builder.Append(prop.GetValue(this));
+                builder.Append("\n");
+            }
+
+            return builder.ToString();
+        }
     }
 }

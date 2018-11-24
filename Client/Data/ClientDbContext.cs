@@ -9,7 +9,6 @@ namespace Client.Data
     class ClientDbContext: DbContext
     {
         public DbSet<Person> People { get; set; }
-        public DbSet<Project> Projects { get; set; }
         public DbSet<Status> Status { get; set; }
 
 

@@ -34,11 +34,10 @@ namespace Client
                     }
                     else if (decision == "c")
                     {
-                        var project = _context.Projects.First();
                         var person = new Person {
                             Age = _random.Next(100),
                             Name = people[_random.Next(people.Count())],
-                            Project = project };
+                            };
 
                         _context.People.Add(person);
                         _context.SaveChanges();

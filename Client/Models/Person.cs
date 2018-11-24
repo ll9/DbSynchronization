@@ -10,8 +10,6 @@ namespace Client.Models
         public string Name { get; set; }
         public int Age { get; set; }
 
-        public int ProjectId { get; set; }
-        public Project Project { get; set; }
 
         public override string ToString()
         {

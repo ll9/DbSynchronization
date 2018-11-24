@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Client.Data;
+using Client.Models;
+using System;
 using System.Reflection;
 
 namespace Client
@@ -10,7 +12,31 @@ namespace Client
             Assembly.Load("Microsoft.EntityFrameworkCore.Design");
 
 
-            Console.WriteLine("Hello World!");
+
+            using (var _context = new ClientDbContext())
+            {
+                string decision = null;
+                while (decision != "exit")
+                {
+                    Console.WriteLine("Press 's' to show all People, 'c' to randomly create a new Person or 'exit' to exit");
+                    decision = Console.ReadLine();
+
+                    if (decision == "s")
+                    {
+                        foreach (var person in _context.People)
+                        {
+                            Console.WriteLine(person.ToString());
+                        }
+                    }
+                    else if (decision == "c")
+                    {
+                        var person = new Person { Age = 22, Name = "Hans" };
+                        _context.People.Add(person);
+                        _context.SaveChanges();
+                    }
+
+                }
+            }
         }
     }
 }

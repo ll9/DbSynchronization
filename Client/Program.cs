@@ -10,6 +10,11 @@ namespace Client
     {
         private static Random _random = new Random();
 
+        private static void Sync()
+        {
+            Console.WriteLine("Should start syncing here");
+        }
+
         static void Main(string[] args)
         {
             Assembly.Load("Microsoft.EntityFrameworkCore.Design");
@@ -22,7 +27,11 @@ namespace Client
                 string decision = null;
                 while (decision != "exit")
                 {
-                    Console.WriteLine("Press 's' to show all People, 'c' to randomly create a new Person or 'exit' to exit");
+                    Console.WriteLine(
+                        "Press 's' to show all People, " + 
+                        "'c' to randomly create a new Person or " + 
+                        "'sync' to synchronize with the server " +
+                        "'exit' to exit");
                     decision = Console.ReadLine();
 
                     if (decision == "s")
@@ -34,13 +43,18 @@ namespace Client
                     }
                     else if (decision == "c")
                     {
-                        var person = new Person {
+                        var person = new Person
+                        {
                             Age = _random.Next(100),
                             Name = people[_random.Next(people.Count())],
-                            };
+                        };
 
                         _context.People.Add(person);
                         _context.SaveChanges();
+                    }
+                    else if (decision == "sync")
+                    {
+                        Sync();
                     }
 
                 }

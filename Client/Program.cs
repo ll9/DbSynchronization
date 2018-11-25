@@ -36,7 +36,7 @@ namespace Client
 
         private static void DeleteDeletedPeopleToLocal()
         {
-            var remotePeople = Rest.GetPeople();
+            var remotePeople = RemotePeopleRepository.Get();
             var remotePeopleIds = remotePeople
                 .Select(s => s.Id);
 
@@ -64,7 +64,7 @@ namespace Client
 
         private static void CopyNewPeopleToLocal()
         {
-            var remotePeople = Rest.GetPeople();
+            var remotePeople = RemotePeopleRepository.Get();
 
             var statusIds = _context.Status
                 .Select(s => s.Id);

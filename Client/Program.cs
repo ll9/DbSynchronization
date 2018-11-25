@@ -64,14 +64,24 @@ namespace Client
                 .Where(status => !localPeopleIds.Contains(status.Id));
 
 
-            // TODO: REMOVE deleted Statuses in remote
+            var req = RemotePeopleRepository.Delete(deletedStatuses.Select(s => s.Id).ToList());
+            if (req.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new HttpRequestException("No Internet Exception");
+            }
             _context.Status.RemoveRange(deletedStatuses);
 
         }
 
         private static void CopyNewPeopleToLocal()
         {
-            var remotePeople = RemotePeopleRepository.Get();
+            var req = RemotePeopleRepository.Get();
+            if (req.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new HttpRequestException("No Internet Exception");
+            }
+
+            var remotePeople = req.Data;
 
             var statusIds = _context.Status
                 .Select(s => s.Id);
@@ -92,9 +102,12 @@ namespace Client
             var newPeople = _context.People
                 .Where(localPerson => !statusIds.Contains(localPerson.Id));
 
-            _context.Status.AddRange(statusIds.Select(lpi => new Status { Id = lpi }));
-            // TODO: POST PEOPLE TO REMOTE
-            // _context.People.AddRange(newPeople);
+            var req = RemotePeopleRepository.Add(newPeople.ToList());
+            if (req.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new HttpRequestException("No Internet Exception");
+            }
+            _context.Status.AddRange(newPeople.Select(p => new Status { Id = p.Id }));
         }
 
         private static void SyncTo()

@@ -141,7 +141,15 @@ namespace DbSyncAlgorithm.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Person.RemoveRange(guids.Select(guid => new Person { Id = guid }));
+            foreach (var guid in guids)
+            {
+                var deletedPerson = await _context.Person.FindAsync(guid);
+                if (deletedPerson != null)
+                {
+                    _context.Person.Remove(deletedPerson);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok(guids);

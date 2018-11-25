@@ -110,9 +110,6 @@ namespace Client
             _context.Status.AddRange(newPeople.Select(p => new Status { Id = p.Id }));
         }
 
-        private static void SyncTo()
-        {
-        }
 
         static void Main(string[] args)
         {

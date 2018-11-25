@@ -10,10 +10,10 @@ namespace Client.Utils
     {
         public static IList<Person> GetPeople()
         {
-            var client = new RestClient("http://example.com");
+            var client = new RestClient("https://localhost:44339");
             // client.Authenticator = new HttpBasicAuthenticator(username, password);
 
-            var request = new RestRequest("resource/{id}", Method.GET);
+            var request = new RestRequest("api/people", Method.GET);
             var response = client.Execute<List<Person>>(request);
 
             return response.Data;

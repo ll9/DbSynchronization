@@ -1,6 +1,7 @@
 ﻿using Client.Data;
 using Client.Models;
 using Client.Utils;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +16,16 @@ namespace Client
         private static void Sync()
         {
             DownloadChanges();
+            UploadChanges();
+
+            _context.SaveChanges();
+
+        }
+
+        private static void UploadChanges()
+        {
+            CopyNewPeopleToRemote();
+            DeleteDeletedPeopleToRemote();
         }
 
         private static void DownloadChanges()
@@ -35,8 +46,20 @@ namespace Client
             _context.People
                 .RemoveRange(deletedStatuses.Select(dp => new Person { Id = dp.Id }));
             _context.Status.RemoveRange(deletedStatuses);
+        }
 
-            _context.SaveChanges();
+        private static void DeleteDeletedPeopleToRemote()
+        {
+            var localPeopleIds = _context.People
+                .Select(s => s.Id);
+
+            var deletedStatuses = _context.Status
+                .Where(status => !localPeopleIds.Contains(status.Id));
+
+
+            // TODO: REMOVE deleted Statuses in remote
+            _context.Status.RemoveRange(deletedStatuses);
+
         }
 
         private static void CopyNewPeopleToLocal()

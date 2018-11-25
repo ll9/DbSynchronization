@@ -50,7 +50,7 @@ namespace Client
             var deletedStatuses = _context.Status
                 .Where(status => !souceIds.Contains(status.Id));
             var deletedPeople = _context.People
-                .Where(person => !souceIds.Contains(person.Id));
+                .Where(person => deletedStatuses.Select(s => s.Id).Contains(person.Id));
 
             _context.People
                 .RemoveRange(deletedPeople);

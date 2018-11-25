@@ -43,14 +43,14 @@ namespace Client
                 throw new HttpRequestException("No Internet Exception");
             }
 
-            var remotePeople = req.Data;
-            var remotePeopleIds = remotePeople
+            var source = req.Data;
+            var souceIds = source
                 .Select(s => s.Id);
 
             var deletedStatuses = _context.Status
-                .Where(status => !remotePeopleIds.Contains(status.Id));
+                .Where(status => !souceIds.Contains(status.Id));
             var deletedPeople = _context.People
-                .Where(person => !remotePeopleIds.Contains(person.Id));
+                .Where(person => !souceIds.Contains(person.Id));
 
             _context.People
                 .RemoveRange(deletedPeople);
@@ -83,13 +83,13 @@ namespace Client
                 throw new HttpRequestException("No Internet Exception");
             }
 
-            var remotePeople = req.Data;
+            var source = req.Data;
 
             var statusIds = _context.Status
                 .Select(s => s.Id);
 
-            var newPeople = remotePeople
-                .Where(remotePerson => !statusIds.Contains(remotePerson.Id));
+            var newPeople = source
+                .Where(s => !statusIds.Contains(s.Id));
 
             _context.People.AddRange(newPeople);
             _context.Status.AddRange(newPeople.Select(np => new Status { Id = np.Id }));

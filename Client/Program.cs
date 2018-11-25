@@ -103,7 +103,7 @@ namespace Client
                 .Where(localPerson => !statusIds.Contains(localPerson.Id));
 
             var req = RemotePeopleRepository.Add(newPeople.ToList());
-            if (req.StatusCode != System.Net.HttpStatusCode.OK)
+            if (req.StatusCode != System.Net.HttpStatusCode.Created)
             {
                 throw new HttpRequestException("No Internet Exception");
             }

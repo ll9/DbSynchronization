@@ -96,8 +96,8 @@ namespace DbSyncAlgorithm.Controllers
             return CreatedAtAction("GetPerson", new { id = person.Id }, person);
         }
 
-        // POST: api/People
-        [HttpPost]
+        // POST: api/People/batch
+        [HttpPost("batch")]
         public async Task<IActionResult> PostPerson([FromBody] ICollection<Person> people)
         {
             if (!ModelState.IsValid)

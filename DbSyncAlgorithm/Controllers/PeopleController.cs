@@ -96,6 +96,21 @@ namespace DbSyncAlgorithm.Controllers
             return CreatedAtAction("GetPerson", new { id = person.Id }, person);
         }
 
+        // POST: api/People
+        [HttpPost]
+        public async Task<IActionResult> PostPerson([FromBody] ICollection<Person> people)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Person.AddRange(people);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPerson", new { ids = people.Select(p => p.Id) }, people);
+        }
+
         // DELETE: api/People/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson([FromRoute] Guid id)
@@ -115,6 +130,21 @@ namespace DbSyncAlgorithm.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(person);
+        }
+
+        // DELETE: api/People/
+        [HttpDelete]
+        public async Task<IActionResult> DeletePerson([FromBody] ICollection<Guid> guids)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Person.RemoveRange(guids.Select(guid => new Person { Id = guid }));
+            await _context.SaveChangesAsync();
+
+            return Ok(guids);
         }
 
         private bool PersonExists(Guid id)

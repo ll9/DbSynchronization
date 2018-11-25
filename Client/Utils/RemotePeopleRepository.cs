@@ -10,12 +10,12 @@ namespace Client.Utils
     {
         private static RestClient _restClient = new RestClient("https://localhost:44339");
 
-        public static IList<Person> Get()
+        public static IRestResponse<List<Person>> Get()
         {
             var request = new RestRequest("api/people", Method.GET);
             var response = _restClient.Execute<List<Person>>(request);
 
-            return response.Data;
+            return response;
         }
 
         public static IRestResponse Add(Person person)

@@ -4,6 +4,7 @@ using Client.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 
 namespace Client
@@ -36,7 +37,13 @@ namespace Client
 
         private static void DeleteDeletedPeopleToLocal()
         {
-            var remotePeople = RemotePeopleRepository.Get();
+            var req = RemotePeopleRepository.Get();
+            if (req.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new HttpRequestException("No Internet Exception");
+            }
+
+            var remotePeople = req.Data;
             var remotePeopleIds = remotePeople
                 .Select(s => s.Id);
 

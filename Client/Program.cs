@@ -14,7 +14,57 @@ namespace Client
 
         private static void Sync()
         {
-            Console.WriteLine("Should start syncing here");
+            DownloadChanges();
+        }
+
+        private static void DownloadChanges()
+        {
+            CopyNewPeopleToLocal();
+            DeleteDeletedPeopleToLocal();
+        }
+
+        private static void DeleteDeletedPeopleToLocal()
+        {
+            var remotePeople = Rest.GetPeople();
+            var remotePeopleIds = remotePeople
+                .Select(s => s.Id);
+
+            var deletedStatuses = _context.Status
+                .Where(status => !remotePeopleIds.Contains(status.Id));
+
+            _context.People
+                .RemoveRange(deletedStatuses.Select(dp => new Person { Id = dp.Id }));
+            _context.Status.RemoveRange(deletedStatuses);
+
+            _context.SaveChanges();
+        }
+
+        private static void CopyNewPeopleToLocal()
+        {
+            var remotePeople = Rest.GetPeople();
+
+            var statusIds = _context.Status
+                .Select(s => s.Id);
+
+            var newPeople = remotePeople
+                .Where(remotePerson => !statusIds.Contains(remotePerson.Id));
+
+            _context.People.AddRange(newPeople);
+            _context.Status.AddRange(statusIds.Select(lpi => new Status { Id = lpi }));
+        }
+
+        private static void CopyNewPeopleToRemote()
+        {
+
+            var statusIds = _context.Status
+                .Select(s => s.Id);
+
+            var newPeople = _context.People
+                .Where(localPerson => !statusIds.Contains(localPerson.Id));
+
+            _context.Status.AddRange(statusIds.Select(lpi => new Status { Id = lpi }));
+            // TODO: POST PEOPLE TO REMOTE
+            // _context.People.AddRange(newPeople);
         }
 
         private static void SyncTo()
@@ -59,30 +109,7 @@ namespace Client
                 else if (decision == "sync")
                 {
                     Sync();
-                    var remotePeople = Rest.GetPeople();
 
-                    var localPeopleIds = _context.Status
-                        .Select(s => s.Id);
-
-                    var newPeople = remotePeople
-                        .Where(remotePerson => !localPeopleIds.Contains(remotePerson.Id));
-
-                    _context.People.AddRange(newPeople);
-                    _context.Status.AddRange(localPeopleIds.Select(lpi => new Status { Id = lpi }));
-
-
-
-                    var remotePeopleIds = remotePeople
-                        .Select(s => s.Id);
-
-                    var deletedStatuses = _context.Status
-                        .Where(status => !remotePeopleIds.Contains(status.Id));
-
-                    _context.People
-                        .RemoveRange(deletedStatuses.Select(dp => new Person { Id = dp.Id }));
-                    _context.Status.RemoveRange(deletedStatuses);
-
-                    _context.SaveChanges();
 
                 }
             }

@@ -90,7 +90,7 @@ namespace Client
                 .Where(remotePerson => !statusIds.Contains(remotePerson.Id));
 
             _context.People.AddRange(newPeople);
-            _context.Status.AddRange(statusIds.Select(lpi => new Status { Id = lpi }));
+            _context.Status.AddRange(newPeople.Select(np => new Status { Id = np.Id }));
         }
 
         private static void CopyNewPeopleToRemote()
@@ -123,6 +123,7 @@ namespace Client
             {
                 Console.WriteLine(
                     "Press 's' to show all People, " +
+                    "'d' to delete first Person, " + 
                     "'c' to randomly create a new Person or " +
                     "'sync' to synchronize with the server " +
                     "'exit' to exit");
@@ -146,11 +147,14 @@ namespace Client
                     _context.People.Add(person);
                     _context.SaveChanges();
                 }
+                else if (decision == "d")
+                {
+                    _context.People.Remove(_context.People.First());
+                    _context.SaveChanges();
+                }
                 else if (decision == "sync")
                 {
                     Sync();
-
-
                 }
             }
         }

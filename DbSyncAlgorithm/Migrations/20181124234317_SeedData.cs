@@ -11,7 +11,7 @@ namespace DbSyncAlgorithm.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("Delete FROM Person WHERE Name = 'Hans' AND Age = 33)");
+            migrationBuilder.Sql("Delete FROM Person WHERE Name = 'Hans' AND Age = 33");
         }
     }
 }
